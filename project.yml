@@ -1,0 +1,9 @@
+packages:
+  - name: instatus
+    functions:
+      - name: discord
+        runtime: go:1.20
+        environment:
+          DISCORD_WEBHOOK_ID: "${DISCORD_WEBHOOK_ID}"
+          DISCORD_WEBHOOK_TOKEN: "${DISCORD_WEBHOOK_TOKEN}"
+          DISCORD_STATUS_ROLE_ID: "${DISCORD_STATUS_ROLE_ID}"
