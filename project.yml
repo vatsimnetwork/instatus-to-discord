@@ -6,4 +6,3 @@ packages:
         environment:
           DISCORD_WEBHOOK_ID: "${DISCORD_WEBHOOK_ID}"
           DISCORD_WEBHOOK_TOKEN: "${DISCORD_WEBHOOK_TOKEN}"
-          DISCORD_STATUS_ROLE_ID: "${DISCORD_STATUS_ROLE_ID}"
