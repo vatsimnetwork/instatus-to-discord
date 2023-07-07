@@ -177,7 +177,6 @@ func (u *MaintenanceUpdate) HumanizedTime() string {
 func Main(ctx context.Context, event InstatusWebhook) {
 	webhookID := os.Getenv("DISCORD_WEBHOOK_ID")
 	webhookToken := os.Getenv("DISCORD_WEBHOOK_TOKEN")
-	statusRoleID := os.Getenv("DISCORD_STATUS_ROLE_ID")
 
 	s, err := discordgo.New("")
 	if err != nil {
@@ -194,8 +193,7 @@ func Main(ctx context.Context, event InstatusWebhook) {
 	}
 
 	p := &discordgo.WebhookParams{
-		Content: fmt.Sprintf("<@&%s>", statusRoleID),
-		Embeds:  []*discordgo.MessageEmbed{e},
+		Embeds: []*discordgo.MessageEmbed{e},
 	}
 
 	_, err = s.WebhookExecute(webhookID, webhookToken, false, p)
