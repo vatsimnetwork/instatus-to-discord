@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"log"
 	"os"
 	"sort"
 	"time"
@@ -175,13 +176,14 @@ func (u *MaintenanceUpdate) HumanizedTime() string {
 }
 
 func Main(ctx context.Context, event InstatusWebhook) {
+	token := os.Getenv("DISCORD_BOT_TOKEN")
 	webhookID := os.Getenv("DISCORD_WEBHOOK_ID")
 	webhookToken := os.Getenv("DISCORD_WEBHOOK_TOKEN")
 	statusRoleID := os.Getenv("DISCORD_STATUS_ROLE_ID")
 
-	s, err := discordgo.New("")
+	s, err := discordgo.New(token)
 	if err != nil {
-		return
+		log.Fatalf("error creating discord session: %s", err)
 	}
 
 	var e *discordgo.MessageEmbed
@@ -198,7 +200,24 @@ func Main(ctx context.Context, event InstatusWebhook) {
 		Embeds:  []*discordgo.MessageEmbed{e},
 	}
 
-	_, err = s.WebhookExecute(webhookID, webhookToken, false, p)
+	m, err := s.WebhookExecute(webhookID, webhookToken, true, p)
+	if err != nil {
+		log.Fatalf("error executing webhook: %s", err)
+	}
+
+	if s.Token != "" {
+		c, err := s.Channel(m.ChannelID)
+		if err != nil {
+			log.Fatalf("error getting channel: %s", err)
+		} else if c.Type != discordgo.ChannelTypeGuildNews {
+			return
+		}
+
+		_, err = s.ChannelMessageCrosspost(m.ChannelID, m.ID)
+		if err != nil {
+			log.Fatalf("error crossposting message: %s", err)
+		}
+	}
 
 	return
 }
