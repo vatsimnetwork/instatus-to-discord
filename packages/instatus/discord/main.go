@@ -181,7 +181,7 @@ func Main(ctx context.Context, event InstatusWebhook) {
 	webhookToken := os.Getenv("DISCORD_WEBHOOK_TOKEN")
 	statusRoleID := os.Getenv("DISCORD_STATUS_ROLE_ID")
 
-	s, err := discordgo.New(token)
+	s, err := discordgo.New("Bot " + token)
 	if err != nil {
 		log.Fatalf("error creating discord session: %s", err)
 	}
